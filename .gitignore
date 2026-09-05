@@ -1,0 +1,8 @@
+*.py
+ui/
+store/
+*.dll
+*.addon64
+*.addon32
+*.json
+!COMPONENTS.json

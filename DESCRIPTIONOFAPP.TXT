@@ -1,0 +1,169 @@
+UPSCALERINO
+What it is, what it is for, and how it is built
+===============================================
+
+
+THE PROBLEM
+-----------
+
+NVIDIA's DLSS 5 driver ships a neural rendering pass: a model that takes a
+rendered frame and synthesises detail into it before you see it. It is real, it
+is on your machine if you have a recent driver, and almost no game can use it,
+because no game ships an integration for it.
+
+The community solved this, several times over, in incompatible ways. There are
+at least five separate add-ons that will drive that neural pass, each written by
+a different person, each with its own settings, its own key names, its own idea
+of where to attach to the frame, and its own set of games it works on. Getting
+one running means:
+
+  - working out which of them can work with your game at all, which depends on
+    its graphics API, its bitness, whether it already has DLSS, and whether it
+    exposes depth and motion vectors
+  - installing ReShade, but the add-on build, loaded under the right filename
+    for that game's API
+  - dropping in the right neural runtime DLL for your GPU generation - the one
+    NVIDIA signs only runs on RTX 50
+  - for older games, a chain of wrappers first: Direct3D 8 or 9 translated up to
+    D3D11 so there is something modern to hook
+  - for games with no DLSS of their own, a "feeder": a shader that hands depth
+    and motion vectors to the neural pass, plus a 64-bit helper process when the
+    game is 32-bit
+  - then finding the settings, which live under different names in different
+    files depending on which add-on you picked
+
+Every step has a way to fail silently. The add-on loads, reports success, and
+does nothing - because it was given fabricated inputs, or its shader never
+compiled, or it is attached at the wrong point in the frame.
+
+Upscalerino does all of that, per game, and tells you plainly when it cannot.
+
+
+WHAT IT ACTUALLY DOES
+---------------------
+
+You point it at your games. It scans, profiles each one, and works out which
+combinations can run there. You pick one and press Set up. It installs a matched
+set of files, writes the settings, and gets out of the way.
+
+  - 24 pipelines ("lanes"), from "ride the game's own DLSS" down to
+    "translate Direct3D 8 through dgVoodoo into D3D11 and feed it by hand"
+  - a component store: the app never bundles other people's binaries, it points
+    at a folder of them and tells you which are missing
+  - per-game settings, exposed as one panel with plain-language labels, written
+    into whichever config the installed add-on actually reads
+  - locks: freeze a game's settings so nothing - not a redeploy, not a repair -
+    overwrites what you dialled in
+  - looks: the half of a tuning that travels between games, saved by name and
+    applied through whatever add-on the next game has
+  - full revert: every file placed is recorded, every file overwritten is backed
+    up, and Revert puts the game back
+
+
+DESIGN RULES, AND WHY
+---------------------
+
+1. WARN, NEVER BLOCK.
+   Anti-cheat, live-service games, experimental lanes: the app says clearly what
+   the risk is and then does what it is told. It is the user's machine and the
+   user's account. An earlier version refused outright on kernel anti-cheat, and
+   all that achieved was people doing it by hand with no warning at all.
+
+2. NEVER LOSE A FILE.
+   Games ship files with the same names the app installs - D3D12Core.dll, dxgi.dll,
+   version.dll, even the feeder's own shader. Every write is preceded by a backup,
+   and the manifest records whether a file existed before we touched it, so Revert
+   never has to guess. This was learned the hard way: an early version compared
+   hashes to decide what to remove, and deleted graphics DLLs that games had
+   shipped themselves.
+
+3. NO COMPONENT MAY OVERWRITE ANOTHER'S FILES.
+   Several lanes copy whole shader packs. If two packs contain a file of the same
+   name, whichever step runs last silently decides which version the game gets.
+   That is not hypothetical - a stray copy of the feeder shader sitting in another
+   pack's folder replaced the correct one on every feeder deploy for weeks, and
+   the only symptom was a warning line in a log nobody read.
+
+4. STATE DRIFTS, SO REPAIR IT.
+   ReShade rewrites its config from each add-on's live UI state every time a game
+   closes. A session that ended on the wrong tab, or with the pass toggled off to
+   compare, comes back looking like the pipeline does nothing. The app repairs
+   the two settings that make the feature vanish - which page opens, and whether
+   the pass runs - when you open a game's page and after a game closes. It never
+   touches the artistic settings, and it never touches a locked game.
+
+5. SAY WHY.
+   Every refusal names its reason. "No pipeline can run here" is followed by each
+   candidate and what disqualified it. A deploy that fails part-way still writes
+   its manifest, so Revert can clean up.
+
+
+HOW IT IS BUILT
+---------------
+
+Python 3.11, standard library only, no dependencies. The UI is one HTML file
+served by a small stdlib HTTP server and opened as an app window in the browser
+that is already on the machine. No framework, no build step, no bundled runtime.
+Edit index.html, refresh, done.
+
+  upscalerino.py     The engine. Lane selection, deploys, reverts, settings,
+                     locks, looks, the component store. Around 7,000 lines and
+                     the only file that writes to a game folder.
+
+  gameprofile.py     Read-only. Given a folder, works out engine, APIs, bitness,
+                     which upscalers it already has, which anti-cheat, and
+                     therefore which lane suits it. Never raises.
+
+  gameres.py         Reads and sets a game's own resolution, per engine. DLSS
+                     upscaling needs the game rendering below the monitor, and
+                     every engine stores that somewhere different.
+
+  ui/server.py       The HTTP layer. Endpoints map roughly one-to-one onto
+                     functions in upscalerino.py. Also owns the library scan and
+                     the cache behind it.
+
+  ui/index.html      The whole interface. Vanilla ES2020.
+
+  COMPONENTS.json    What each lane needs on disk, and where to get it.
+  knowledge.json     Facts about each add-on: its settings, its key names, which
+                     config file it reads, what its values mean.
+  FIXES.txt          A running log of what broke and why. Worth reading before
+                     changing anything - most of the odd-looking code is odd for
+                     a reason recorded there.
+
+Key concepts in the code:
+
+  LANE / ROUTE    One complete way to get neural rendering into a game. Named,
+                  with a description, pros and cons shown in the UI.
+  CONSUMER        The add-on that actually drives the neural pass. Exactly one
+                  per game folder; installing two is a hang or a black screen.
+  FEEDER          Supplies depth and motion vectors to a consumer for a game
+                  that has no DLSS of its own. A matched set of four files - mix
+                  two releases and it starts anyway and feeds a blind frame.
+  MANIFEST        upscalerino.deploy.json, written into the game folder. What was
+                  placed, what was backed up, what existed before.
+  LOCK            A game frozen at chosen settings, restored verbatim.
+  LOOK            The portable half of a tuning - model, intensity, structure,
+                  passes - stored as the app's own control names so it applies
+                  through any consumer.
+
+
+WHERE IT IS UP TO
+-----------------
+
+Working and verified: 55 of 56 real games route to a lane that completes; all
+five consumers receive their settings; revert restores files a game shipped
+itself; the neural page repairs its own drift; per-game locks restore exactly.
+
+Known open items:
+
+  - Just Cause 2 has no lane that can run it.
+  - Monster Hunter Wilds wants a hook point the app does not choose for it, per
+    the add-on author's own setup notes. There is no per-game hook override yet.
+  - Fifteen of the 24 pipelines are built and selectable but have not been
+    watched in a game yet. Reports on the Discord move them up the table.
+
+If you are picking this up: read FIXES.txt first, then upscalerino.py from
+route_plan() outward. route_plan decides everything, and every deploy function
+below it is a variation on "place a matched set of files, then write the
+settings the installed consumer actually reads".
