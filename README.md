@@ -86,11 +86,11 @@ other than the tested one: you get a clear warning and then it is your call.
 - An NVIDIA RTX card. RTX 50 runs NVIDIA's own signed neural build. RTX 20 / 30 / 40 need
   a community build - the signed one refuses to start on them.
 - A recent NVIDIA driver (the neural runtime, `nvngx_dlssnr.dll`, ships with it).
-- The files the app is not allowed to bundle. Most of them cannot legally be redistributed
-  by anyone but their author, so you supply them: ReShade's Addon build, the neural add-ons,
-  NVIDIA's runtimes. The app tells you which ones, where each comes from, and checks each
-  one against the build it was tested with. [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)
-  has the full list with links.
+- The download carries the components (ReShade, the add-ons, the feeders, OptiScaler,
+  the wrappers, the shaders) and two community neural builds. You add NVIDIA's signed
+  RTX 50 build or the sf-v2 build for RTX 20/30/40 if you want those instead: drop the
+  file on the app window. Every component's author, terms and source are in
+  [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 - **ReShade 6.8.0, Addon build.** The add-ons are compiled against one ReShade API. Use the
   same build the app was tested with until a release says a newer one is supported; a
   different one is reported, not refused.
