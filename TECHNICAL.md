@@ -155,4 +155,5 @@ the library scan and preferences under `ui\`, the components `store\`, the `engi
 tree, the drop folder and `shared looks\`. The program folder holds only the program, so a
 reinstall or a Setup update cannot touch your data, and an in-app update never did.
 Running from a source checkout keeps all of it beside the code instead. `UPSCALERINO_DATA`
-overrides the location.
+overrides the location. Settings > Data folder moves it anywhere you like: the choice is
+remembered in `%LOCALAPPDATA%\Upscalerino\data-location.txt`, which stays in your profile.
