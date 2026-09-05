@@ -147,3 +147,12 @@ paths from your machine.
 BSD-2-Clause - see [LICENSE](LICENSE). Every component the app installs belongs to someone
 else and keeps its own licence.
 
+## Where your data lives
+
+The installed app keeps everything you make in `%LOCALAPPDATA%\Upscalerino`: `store.json`
+(component pins), `secrets.json` (your SteamGridDB key), locks, looks, learned profiles,
+the library scan and preferences under `ui\`, the components `store\`, the `engines\`
+tree, the drop folder and `shared looks\`. The program folder holds only the program, so a
+reinstall or a Setup update cannot touch your data, and an in-app update never did.
+Running from a source checkout keeps all of it beside the code instead. `UPSCALERINO_DATA`
+overrides the location.
