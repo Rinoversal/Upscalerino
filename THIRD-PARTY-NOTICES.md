@@ -116,7 +116,7 @@ If your work is here and you would rather it were not deployed, linked, or credi
 
 - **By:** kibblerz
 - **Licence / terms:** Open release on GitHub; see the project page for its terms.
-- **Files the app places:** `standalone-dlssnr.addon64`, `DLSS5_AIO_Feed.fx`
+- **Files the app places:** `standalone-dlssnr.addon64`, `DLSS5_AIO_Feed.fx`, `nvngx.dll`
 - **Where to get it:**
   - [DLSS5-Reshade-AIO releases](https://github.com/kibblerz/DLSS5-Reshade-AIO/releases)
 - **Build the app is tested with:** `standalone-dlssnr.addon64`, 138,752 bytes, sha256 `2fd358882d2cd30ca6eb68821fa5d9c58269ea5856f66ca6cdfa108fbfa8d105`
@@ -134,10 +134,10 @@ If your work is here and you would rather it were not deployed, linked, or credi
 
 - **By:** Dege
 - **Licence / terms:** Freeware; the author's terms cover redistribution with other software.
-- **Files the app places:** `D3D8.dll`, `D3D9.dll`, `DDraw.dll`, `dgVoodooCpl.exe`
+- **Files the app places:** `MS/x86/D3D8.dll`, `MS/x86/D3D9.dll`, `MS/x86/DDraw.dll`, `MS/x86/D3DImm.dll`, `dgVoodooCpl.exe`, `dgVoodoo.conf`
 - **Where to get it:**
   - [dgVoodoo2](https://www.dege.freeweb.hu/dgVoodoo2/)
-- **Build the app is tested with:** `D3D8.dll`, 2,012,672 bytes, sha256 `8e6bd4fa76f47c48e7ceb1ceefb03808f5b739e4c837273a10b61c1c616ab3dc`
+- **Build the app is tested with:** `MS/x86/D3D9.dll`, 482,304 bytes, sha256 `db1c445f7bcf699df1e175e974c779bdc7e19a468680a44884b1ab7078888d04`
 
 ## DXVK
 

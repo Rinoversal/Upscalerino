@@ -42,11 +42,12 @@ other than the tested one: you get a clear warning and then it is your call.
 ## Pipelines
 
 <!-- PIPELINES:BEGIN -->
-24 pipelines, shown as 18 entries because the three ladders each install in stages. **7 tested** in play, **3 set up** on a real game and waiting to be confirmed, **14 untested** - built and selectable, but nobody has run them yet. Untested means exactly that, not broken; it is where bug reports are most welcome.
+24 pipelines, shown as 18 entries because the three ladders each install in stages. **8 tested** in play, **2 set up** on a real game and waiting to be confirmed, **14 untested** - built and selectable, but nobody has run them yet. Untested means exactly that, not broken; it is where bug reports are most welcome.
 
 | Pipeline | Status | Needs |
 |---|---|---|
 | Chicken on native DLSS | Tested - works with the applications this engine is for | ReShade 6.8.0 Addon build, DLSS Neural Rendering runtime, Deep Fried Chicken, effect: MXAO, effect: RCAS |
+| DLSS 5 Tool (krnikitin) | Tested - works with the applications this engine is for | ReShade 6.8.0 Addon build, NVIDIA DLSS runtime, DLSS Neural Rendering runtime, DLSS 5 Tool add-on, effect: MXAO, effect: RCAS |
 | Feeder + Chicken | Tested - works with the applications this engine is for | ReShade 6.8.0 Addon build, NVIDIA DLSS runtime, DLSS Neural Rendering runtime, DLSS5-Feeder 0.12.1-beta.2 (0.12.0 kept as fallback), Deep Fried Chicken, effect: RCAS |
 | ShortFuse direct-NR | Tested - works with the applications this engine is for | ReShade 6.8.0 Addon build, NVIDIA DLSS runtime, DLSS Neural Rendering runtime, RenoDX DLSS add-on (ShortFuse build), effect: MXAO, effect: RCAS |
 | ShortFuse direct-NR (pass-bar build) | Tested - works with the applications this engine is for | ReShade 6.8.0 Addon build, NVIDIA DLSS runtime, DLSS Neural Rendering runtime, RenoDX DLSS add-on - pass-bar build, effect: MXAO, effect: RCAS |
@@ -54,7 +55,6 @@ other than the tested one: you get a clear warning and then it is your call.
 | Vulkan feeder (64-bit) | Tested - works with the applications this engine is for | ReShade 6.8.0 Addon build, NVIDIA DLSS runtime, DLSS Neural Rendering runtime, DLSS 5 Tool add-on, DLSS5-Feeder 0.12.1-beta.2 (0.12.0 kept as fallback), effect: RCAS |
 | Vulkan feeder + NIGHTLY ReShade layer | Tested - works with the applications this engine is for | ReShade 6.8.0 Addon build, NVIDIA DLSS runtime, DLSS Neural Rendering runtime, DLSS 5 Tool add-on, DLSS5-Feeder 0.12.1-beta.2 (0.12.0 kept as fallback), effect: RCAS |
 | 32-bit DX8/DX9 games via dgVoodoo (installs in 3 stages) | Set up on a real game, not yet confirmed in play | dgVoodoo 2.87.4, ReShade 6.8.0 Addon build, effect: RCAS, DLSS Neural Rendering runtime, DLSS5-Feeder 0.12.1-beta.2 (0.12.0 kept as fallback) |
-| DLSS 5 Tool (krnikitin) | Set up on a real game, not yet confirmed in play | ReShade 6.8.0 Addon build, NVIDIA DLSS runtime, DLSS Neural Rendering runtime, DLSS 5 Tool add-on, effect: MXAO, effect: RCAS |
 | 32-bit games via DXVK (installs in 3 stages) | Built and selectable, nobody has run it yet | DXVK, ReShade 6.8.0 Addon build, effect: RCAS, DLSS Neural Rendering runtime, DLSS5-Feeder 0.12.1-beta.2 (0.12.0 kept as fallback) |
 | 64-bit DX9 games via dgVoodoo (installs in 3 stages) | Built and selectable, nobody has run it yet | dgVoodoo 2.87.4, ReShade 6.8.0 Addon build, effect: RCAS, DLSS Neural Rendering runtime, DLSS5-Feeder 0.12.1-beta.2 (0.12.0 kept as fallback), Deep Fried Chicken |
 | dgVoodoo DX8 chain | Built and selectable, nobody has run it yet | dgVoodoo 2.87.4, 7-Zip command line, effect: RCAS |
